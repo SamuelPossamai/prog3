@@ -18,11 +18,35 @@ GameWindow::GameWindow(QWidget *parent) :
 
     ui->graphicsView->setSceneRect(this->frameGeometry());
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff );
+    //ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff );
 
     game = new OneSuitGame("player", scene);
 
     game->setEventHandler(this);
+
+    restart_button = new QPushButton("SURRENDER", this);
+
+    //restart_button->setStyleSheet("color: black; background-color: red;");
+
+    restart_button->setGeometry(0, 470, 80, 30);
+
+    restart_button->show();
+
+    QObject::connect(restart_button, SIGNAL (clicked()), this, SLOT (__restart_button_pressed__()));
+
+    ok_button = new QPushButton("ok", this);
+
+    ok_button->setGeometry(335, 230, 30, 30);
+
+    ok_button->hide();
+
+    QObject::connect(ok_button, SIGNAL (clicked()), this, SLOT (__ok_button_pressed__()));
+
+    label = new QLabel("You Won", this);
+
+    label->setGeometry(325, 200, 60, 30);
+
+    label->hide();
 }
 
 GameWindow::~GameWindow()
@@ -36,25 +60,10 @@ void GameWindow::gameover_event(bool won){
 
     if(won == false) return;
 
-    if(ok_button == nullptr){
+    ok_button->show();
+    label->show();
 
-        ok_button = new QPushButton("ok", this);
-
-        ok_button->setGeometry(295, 230, 30, 30);
-
-        ok_button->show();
-
-        QObject::connect(ok_button, SIGNAL (clicked()), this, SLOT (__ok_button_pressed__()));
-    }
-
-    if(label == nullptr){
-
-        label = new QLabel("You Won", this);
-
-        label->setGeometry(285, 200, 60, 30);
-
-        label->show();
-    }
+    restart_button->hide();
 }
 
 void GameWindow::__ok_button_pressed__(){
@@ -65,12 +74,21 @@ void GameWindow::__ok_button_pressed__(){
 
     game->setEventHandler(this);
 
-    if(ok_button != nullptr) delete ok_button;
-    if(label != nullptr) delete label;
+    ok_button->hide();
+    label->hide();
 
-    ok_button = nullptr;
-    label = nullptr;
+    restart_button->show();
 }
+
+void GameWindow::__restart_button_pressed__(){
+
+    if(game != nullptr) delete game;
+
+    game = new OneSuitGame("player", scene);
+
+    game->setEventHandler(this);
+}
+
 
 
 

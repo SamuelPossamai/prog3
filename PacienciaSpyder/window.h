@@ -28,6 +28,7 @@ public:
 private slots:
 
     void __ok_button_pressed__();
+    void __restart_button_pressed__();
 
 private:
 
@@ -37,7 +38,7 @@ private:
 
     OneSuitGame *game;
 
-    QPushButton *ok_button;
+    QPushButton *ok_button, *restart_button;
     QLabel *label;
 };
 
